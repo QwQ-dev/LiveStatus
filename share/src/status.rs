@@ -32,14 +32,16 @@ impl Status {
         app_name: String,
         force_status_type: String,
     ) -> Status {
-        Status { title, app_name, os_name: std::env::consts::OS.to_string(), force_status_type }
+        Status {
+            title,
+            app_name,
+            os_name: std::env::consts::OS.to_string(),
+            force_status_type,
+        }
     }
 
     pub fn na() -> Status {
-        Status::new(
-            "N/A".to_string(),
-            "N/A".to_string(),
-        )
+        Status::new("N/A".to_string(), "N/A".to_string())
     }
 
     pub fn offline() -> Status {

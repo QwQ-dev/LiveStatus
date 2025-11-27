@@ -4,12 +4,12 @@ use flexi_logger::{
 };
 use fs2::FileExt;
 use reqwest::{Client, Error, Response};
+use share::settings::ClientSettings;
 use share::settings_handler::CLIENT_SETTINGS;
 use share::status::Status;
 use std::fs::File;
 use std::time::Duration;
 use tokio::time::sleep;
-use share::settings::ClientSettings;
 
 const LOG_FILE_BASENAME: &str = "status_reporter";
 const LOCK_FILE_NAME: &str = "status_reporter.lock";
@@ -101,8 +101,5 @@ pub fn log_format(
 
 fn get_active_window_status() -> Result<Status, ()> {
     let active_window = get_active_window()?;
-    Ok(Status::new(
-        active_window.title,
-        active_window.app_name,
-    ))
+    Ok(Status::new(active_window.title, active_window.app_name))
 }
