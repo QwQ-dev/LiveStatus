@@ -18,3 +18,13 @@ This project features a simple **client-server setup** designed to show what I a
 
 * **Backend:** Rust (Axum)
 * **Client:** Rust (Tokio, Reqwest)
+  Understood. Here is a more concise section focusing only on the pre-built versions:
+
+### Pre-built Versions
+
+You can find the latest built **Backend** and **Client** executables through our Jenkins CI/CD pipeline.
+
+* **Jenkins Build Address:**
+  [https://qwqdev.jenkins.legacylands.cn/job/LiveStatus/](https://qwqdev.jenkins.legacylands.cn/job/LiveStatus/)
+
+Please check the build artifacts for the specific **Linux** or **Windows** versions you require.
