@@ -21,3 +21,5 @@ client-android/.cxx/
 
 .DS_Store
 Thumbs.db
+
+client-android/release.keystore
