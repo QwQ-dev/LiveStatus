@@ -4,7 +4,7 @@
 
 This project features a simple **client-server setup** designed to show what I am currently doing.
 
-* **Live Demo:** You can see the current status page in action at: **`qwqdev.is-a.dev`**
+* **Live Demo:** You can see the current status page in action at: [**`qwqdev.is-a.dev#now`**](https://qwqdev.is-a.dev#now)
 
 ### Features
 
