@@ -4,6 +4,9 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+regex = "1.12.2"
 serde = { workspace = true }
 serde_yaml = { workspace = true }
 once_cell = { workspace = true }
+flexi_logger = { workspace = true }
+log = { workspace = true }

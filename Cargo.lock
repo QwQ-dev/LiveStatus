@@ -125,7 +125,7 @@ name = "backend"
 version = "0.1.0"
 dependencies = [
  "axum",
- "once_cell",
+ "log",
  "share",
  "tokio",
 ]
@@ -235,7 +235,6 @@ name = "client"
 version = "0.1.0"
 dependencies = [
  "active-win-pos-rs",
- "flexi_logger",
  "fs2",
  "log",
  "reqwest",
@@ -1370,7 +1369,10 @@ dependencies = [
 name = "share"
 version = "0.1.0"
 dependencies = [
+ "flexi_logger",
+ "log",
  "once_cell",
+ "regex",
  "serde",
  "serde_yaml",
 ]

@@ -1,3 +1,4 @@
+use crate::filter::filter_rule::FilterRule;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
@@ -11,6 +12,10 @@ pub struct ClientSettings {
 pub struct ServerSettings {
     pub host: String,
     pub key: String,
+    pub timeout_secs: u64,
+
+    #[serde(default = "Vec::new")]
+    pub filter_rule: Vec<FilterRule>,
 }
 
 impl Default for ClientSettings {
@@ -28,6 +33,8 @@ impl Default for ServerSettings {
         ServerSettings {
             host: "127.0.0.1:1239".to_string(),
             key: " ".to_string(),
+            timeout_secs: 20,
+            filter_rule: Vec::new(),
         }
     }
 }

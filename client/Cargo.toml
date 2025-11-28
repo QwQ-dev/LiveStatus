@@ -9,5 +9,4 @@ active-win-pos-rs = "0.9"
 reqwest = { version = "0.12.24", features = ["json"] }
 share = { path = "../share" }
 fs2 = "0.4.3"
-flexi_logger = "0.31.7"
-log = "0.4.28"
+log = { workspace = true }

@@ -5,6 +5,6 @@ edition = "2024"
 
 [dependencies]
 tokio = { workspace = true }
-once_cell = { workspace = true }
 axum = { version = "0.8.7", features = ["macros"] }
 share = { path = "../share" }
+log = { workspace = true }

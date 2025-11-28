@@ -1,5 +1,6 @@
-use crate::settings::{ClientSettings, ServerSettings};
+use crate::config::settings::{ClientSettings, ServerSettings};
 use once_cell::sync::Lazy;
+use regex::Regex;
 use std::path::PathBuf;
 
 pub fn get_client_settings_path_buf() -> PathBuf {
@@ -70,6 +71,19 @@ pub static SERVER_SETTINGS: Lazy<ServerSettings> = Lazy::new(|| {
         return new_settings;
     }
 
-    serde_yaml::from_str(&SERVER_SETTINGS_CONTENT)
-        .expect("Failed parse server settings. Please delete server settings from config file and re-create it.")
+    let settings: ServerSettings = serde_yaml::from_str(&SERVER_SETTINGS_CONTENT)
+        .expect("Failed parse server config. Please delete server config from config file and re-create it.");
+
+    let mut final_settings = settings;
+
+    for rule in &mut final_settings.filter_rule {
+        rule.compiled_regex = Some(Regex::new(&rule.regex).unwrap_or_else(|_| {
+            panic!(
+                "Invalid regex pattern in server configuration for rule: '{}'. Replacement: '{}'",
+                rule.regex, rule.replacement
+            )
+        }));
+    }
+
+    final_settings
 });
