@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         }
         settingsManager.setServiceEnabled(true);
         Toast.makeText(this, R.string.toast_service_started, Toast.LENGTH_SHORT).show();
-        updateServiceStatus();
+        setServiceStatusUI(true);
     }
 
     private void onStopClicked() {
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         stopService(serviceIntent);
         settingsManager.setServiceEnabled(false);
         Toast.makeText(this, R.string.toast_service_stopped, Toast.LENGTH_SHORT).show();
-        updateServiceStatus();
+        setServiceStatusUI(false);
     }
 
     private void requestAccessibilityPermission() {
@@ -167,7 +167,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateServiceStatus() {
-        boolean isRunning = isServiceRunning();
+        setServiceStatusUI(isServiceRunning());
+    }
+
+    private void setServiceStatusUI(boolean isRunning) {
         if (isRunning) {
             statusText.setText(R.string.status_running);
             statusText.setTextColor(ContextCompat.getColor(this, android.R.color.holo_green_dark));

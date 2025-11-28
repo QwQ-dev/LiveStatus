@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -39,21 +40,47 @@ public class AppDetectorService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-            CharSequence packageNameSeq = event.getPackageName();
-            if (packageNameSeq != null) {
-                String packageName = packageNameSeq.toString();
-
-                if (packageName.contains("systemui") ||
-                        packageName.contains("inputmethod") ||
-                        packageName.equals("android")) {
-                    return;
-                }
-
-                currentPackageName = packageName;
-                currentAppName = getAppNameFromPackage(packageName);
-            }
+        if (event.getEventType() != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            return;
         }
+
+        CharSequence packageNameSeq = event.getPackageName();
+        CharSequence classNameSeq = event.getClassName();
+
+        if (packageNameSeq == null || classNameSeq == null) {
+            return;
+        }
+
+        String packageName = packageNameSeq.toString();
+        String className = classNameSeq.toString();
+
+        ComponentName componentName = new ComponentName(packageName, className);
+        if (!isActivity(componentName)) {
+            return;
+        }
+
+        if (isSystemUIComponent(packageName)) {
+            return;
+        }
+
+        currentPackageName = packageName;
+        currentAppName = getAppNameFromPackage(packageName);
+    }
+
+    private boolean isActivity(ComponentName componentName) {
+        try {
+            PackageManager pm = getPackageManager();
+            ActivityInfo activityInfo = pm.getActivityInfo(componentName, 0);
+            return activityInfo != null;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
+
+    private boolean isSystemUIComponent(String packageName) {
+        return packageName.equals("com.android.systemui") ||
+                packageName.equals("android") ||
+                packageName.contains("inputmethod");
     }
 
     @Override
@@ -65,10 +92,17 @@ public class AppDetectorService extends AccessibilityService {
         super.onServiceConnected();
         instance = this;
 
-        AccessibilityServiceInfo info = new AccessibilityServiceInfo();
+        AccessibilityServiceInfo info = getServiceInfo();
+        if (info == null) {
+            info = new AccessibilityServiceInfo();
+        }
+
         info.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
         info.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC;
-        info.flags = AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS;
+        info.flags = AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS;
+        info.notificationTimeout = 0;
+        info.packageNames = null;
+
         setServiceInfo(info);
     }
 
