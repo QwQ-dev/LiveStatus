@@ -1,5 +1,23 @@
+# Rust
 /target
+
 /logs
 /config
 status_reporter.lock
+
 .idea
+*.iml
+
+client-android/.gradle/
+client-android/build/
+client-android/app/build/
+client-android/local.properties
+client-android/captures/
+client-android/.externalNativeBuild/
+client-android/.cxx/
+
+*.jks
+*.keystore
+
+.DS_Store
+Thumbs.db

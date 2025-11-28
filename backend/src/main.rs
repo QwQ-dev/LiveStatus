@@ -9,16 +9,22 @@ use once_cell::sync::Lazy;
 use share::settings::ServerSettings;
 use share::settings_handler::SERVER_SETTINGS;
 use share::status::Status;
+use std::collections::HashMap;
 use std::sync::Arc;
 use std::time::SystemTime;
 use tokio::sync::Mutex;
 
-type SharedStatus = Arc<Mutex<Status>>;
-type SharedStatusTime = Arc<Mutex<u128>>;
+#[derive(Clone)]
+struct DeviceStatus {
+    status: Status,
+    last_update: u128,
+}
 
-static CURRENT_STATUS: Lazy<SharedStatus> = Lazy::new(|| Arc::new(Mutex::new(Status::offline())));
-static CURRENT_STATUS_TIME: Lazy<SharedStatusTime> =
-    Lazy::new(|| Arc::new(Mutex::new(get_now_time_ms())));
+type DeviceStatusMap = Arc<Mutex<HashMap<String, DeviceStatus>>>;
+
+static DEVICE_STATUSES: Lazy<DeviceStatusMap> = Lazy::new(|| Arc::new(Mutex::new(HashMap::new())));
+
+const TIMEOUT_MS: u128 = 20 * 1000;
 
 #[tokio::main]
 async fn main() {
@@ -26,8 +32,7 @@ async fn main() {
 
     let app = Router::new()
         .route("/api/status", get(get_status).put(put_status))
-        .layer(Extension(CURRENT_STATUS.clone()))
-        .layer(Extension(CURRENT_STATUS_TIME.clone()));
+        .layer(Extension(DEVICE_STATUSES.clone()));
 
     let listener = tokio::net::TcpListener::bind(&settings.host).await.unwrap();
 
@@ -38,8 +43,7 @@ async fn main() {
 
 async fn put_status(
     headers: HeaderMap,
-    Extension(current_status): Extension<SharedStatus>,
-    Extension(current_status_time): Extension<SharedStatusTime>,
+    Extension(device_statuses): Extension<DeviceStatusMap>,
     Json(new_status): Json<Status>,
 ) -> impl IntoResponse {
     let auth_header = headers
@@ -51,35 +55,36 @@ async fn put_status(
         return StatusCode::UNAUTHORIZED.into_response();
     }
 
-    let mut now_time_lock = current_status_time.lock().await;
-    let mut now_status_lock = current_status.lock().await;
+    let os_name = new_status.os_name.clone();
+    let mut statuses = device_statuses.lock().await;
 
-    *now_status_lock = new_status;
-    *now_time_lock = get_now_time_ms();
+    statuses.insert(
+        os_name.clone(),
+        DeviceStatus {
+            status: new_status.clone(),
+            last_update: get_now_time_ms(),
+        },
+    );
 
     println!(
-        "Now status: {}, {}, {}, {}",
-        now_status_lock.app_name,
-        now_status_lock.title,
-        now_status_lock.os_name,
-        now_status_lock.force_status_type
+        "Status ({}): title: {}, name: {}, type: {}",
+        new_status.os_name, new_status.title, new_status.app_name, new_status.force_status_type
     );
 
     StatusCode::OK.into_response()
 }
 
-async fn get_status(
-    Extension(current_status): Extension<SharedStatus>,
-    Extension(current_status_time): Extension<SharedStatusTime>,
-) -> Json<Status> {
-    let last_update_time_lock = current_status_time.lock().await;
-    let status_lock = current_status.lock().await;
+async fn get_status(Extension(device_statuses): Extension<DeviceStatusMap>) -> Json<Vec<Status>> {
+    let statuses = device_statuses.lock().await;
+    let now = get_now_time_ms();
 
-    if get_now_time_ms().saturating_sub(*last_update_time_lock) > (20 * 1000) {
-        Json(Status::offline())
-    } else {
-        Json(status_lock.clone())
-    }
+    let active_statuses: Vec<Status> = statuses
+        .values()
+        .filter(|device| now.saturating_sub(device.last_update) <= TIMEOUT_MS)
+        .map(|device| device.status.clone())
+        .collect();
+
+    Json(active_statuses)
 }
 
 fn get_now_time_ms() -> u128 {

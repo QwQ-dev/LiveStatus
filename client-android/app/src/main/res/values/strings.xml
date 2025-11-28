@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LiveStatus</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="hint_server_url">Server URL</string>
+    <string name="hint_auth_key">Authentication Key</string>
+    <string name="hint_update_interval">Update Interval (seconds)</string>
+    <string name="btn_save">Save Settings</string>
+
+    <string name="permissions_title">Permissions</string>
+    <string name="permission_granted">Usage Stats Permission: Granted</string>
+    <string name="permission_not_granted">Usage Stats Permission: Not Granted</string>
+    <string name="btn_grant_permission">Grant Usage Stats Permission</string>
+
+    <string name="service_control_title">Service Control</string>
+    <string name="btn_start">Start Service</string>
+    <string name="btn_stop">Stop Service</string>
+
+    <string name="status_running">Status: Running</string>
+    <string name="status_stopped">Status: Stopped</string>
+
+    <string name="toast_settings_saved">Settings saved</string>
+    <string name="toast_configure_first">Please configure server URL and auth key first</string>
+    <string name="toast_grant_permission_first">Please grant usage stats permission first</string>
+    <string name="toast_service_started">Service started</string>
+    <string name="toast_service_stopped">Service stopped</string>
+
+    <string name="accessibility_service_description">Detects currently running foreground app for status reporting. This service only monitors which app is in the foreground and does not read any content.</string>
+    <string name="accessibility_permission_granted">Accessibility Permission: Granted</string>
+    <string name="accessibility_permission_not_granted">Accessibility Permission: Not Granted (Recommended)</string>
+    <string name="btn_grant_accessibility">Grant Accessibility Permission</string>
+</resources>
