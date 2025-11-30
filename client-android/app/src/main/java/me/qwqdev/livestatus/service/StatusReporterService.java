@@ -201,10 +201,9 @@ public class StatusReporterService extends Service {
         }
 
         if (AppDetectorService.isServiceRunning()) {
-            String packageName = AppDetectorService.getCurrentPackageName();
-            String appName = AppDetectorService.getCurrentAppName();
-            if (packageName != null && appName != null) {
-                return new Status(packageName, appName);
+            String[] appInfo = AppDetectorService.getActiveAppInfo();
+            if (appInfo != null) {
+                return new Status(appInfo[0], appInfo[1]);
             }
         }
 
