@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QwQ-dev | Status</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Space Grotesk', 'sans-serif'],
+            },
+            colors: {
+              dark: '#050505',
+              light: '#fafafa',
+              primary: '#6366f1', // Indigo 500
+              secondary: '#14b8a6', // Teal 500
+              accent: '#a855f7', // Purple 500
+            },
+            backgroundImage: {
+              'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+            },
+            animation: {
+              'blob': 'blob 10s infinite',
+              'float': 'float 6s ease-in-out infinite',
+              'shimmer': 'shimmer 2s linear infinite',
+              'fade-in-up': 'fadeInUp 1s ease-out forwards',
+              'fade-in': 'fadeIn 0.5s ease-out forwards',
+              'spin-slow': 'spinSlow 20s linear infinite',
+              'bounce-slow': 'bounceSlow 3s ease-in-out infinite',
+              'wiggle': 'wiggle 1s ease-in-out infinite',
+              'glow': 'glow 2s ease-in-out infinite alternate',
+            },
+            keyframes: {
+              blob: {
+                '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                '100%': { transform: 'translate(0px, 0px) scale(1)' },
+              },
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-20px)' },
+              },
+              shimmer: {
+                '0%': { backgroundPosition: '200% 0' },
+                '100%': { backgroundPosition: '-200% 0' }
+              },
+              fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' }
+              },
+              fadeIn: {
+                '0%': { opacity: '0', transform: 'scale(0.95)' },
+                '100%': { opacity: '1', transform: 'scale(1)' }
+              },
+              spinSlow: {
+                '0%': { transform: 'rotate(0deg)' },
+                '100%': { transform: 'rotate(360deg)' },
+              },
+              bounceSlow: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-10px)' },
+              },
+              wiggle: {
+                '0%, 100%': { transform: 'rotate(-3deg)' },
+                '50%': { transform: 'rotate(3deg)' },
+              },
+              glow: {
+                '0%': { boxShadow: '0 0 20px rgba(99, 102, 241, 0.3)' },
+                '100%': { boxShadow: '0 0 40px rgba(99, 102, 241, 0.6)' },
+              }
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+      body {
+        background-color: #050505;
+        color: #fafafa;
+        overflow-x: hidden;
+      }
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #050505; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #333; 
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #6366f1; 
+      }
+      
+      /* Utilities */
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
