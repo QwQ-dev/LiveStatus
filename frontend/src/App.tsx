@@ -1,6 +1,7 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {LanguageProvider, useLanguage} from './contexts/LanguageContext';
-import {Globe, Monitor, Sparkles} from 'lucide-react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useLanguage, LanguageProvider } from './contexts/LanguageContext';
+import { Sparkles, Monitor, Globe } from 'lucide-react';
+import { FadeText } from './components/FadeText';
 
 interface StatusData {
   app_name: string;
@@ -19,10 +20,8 @@ interface Particle {
   type: 'star' | 'heart' | 'sparkle' | 'dot';
 }
 
-// Status types
 type StatusType = 'online' | 'offline' | 'wayland_limited' | 'unknown';
 
-// Determine status type from API response
 const getStatusType = (data: StatusData | null, isConnected: boolean): StatusType => {
   if (!isConnected || !data) return 'offline';
 
@@ -306,8 +305,8 @@ const KAOMOJI = {
     "ε(´סּ︵סּ`)з", "(¬_¬)", "┌( ಠ_ಠ)┘", "(ᗒᗣᗕ)՞",
     "( •_•)>⌐■-■", "(⌐■_■)", "༼ つ ◕_◕ ༽つ", "(҂◡_◡)",
     "ᕦ(ツ)ᕤ", "(｀・ω・´)", "( ˶ˆᗜˆ˵ )", "(/≧▽≦)/",
-    "(・・?)", "(˘･_･˘)", "( ´ー`)φ", "φ(゜▽゜*)♪",
-    "( ._.)", "¯\\_(ツ)_/¯", "(´-ω-`)", "(`ε´)"
+    "(・・?)", "(˘･_･˘)", "( ´ー`)", "φ(゜▽゜*)♪",
+    "( ._.)", "¯\_(ツ)_/¯", "(´-ω-`)", "(`ε´)"
   ],
   music: [
     "♪(´ε` )", "～(￣▽￣～)", "(～￣▽￣)～", "♪～(´ε｀ )",
@@ -327,7 +326,7 @@ const KAOMOJI = {
     "щ(ಠ益щ)", "ლ(ಠ益ಠლ)", "ヽ(#`Д´)ノ",
     "┻━┻ ︵ \(°□°)/ ︵ ┻━┻", "(ノಠ益ಠ)ノ彡┻━┻",
     "(ಠ_ಠ)>⌐■-■", "(⌐■_■)", "( •_•)>⌐■-■", "gg (￣▽￣)ゞ",
-    "ヽ(´ー`)ノ", "(￣ー￣)ゞ", "( ˘ω˘ )☞", "✧*。٩(ˊᗜˋ*)و✧*。",
+    "ヽ(´ー`)", "(￣ー￣)ゞ", "( ˘ω˘ )☞", "✧*。٩(ˊᗜˋ*)و✧*。",
     "(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧", "ヽ(゜∇゜)ノ", "☆*:.｡.o(≧▽≦)o.｡.:*☆", "(๑✧◡✧๑)"
   ],
   bilibili: [
@@ -343,7 +342,7 @@ const KAOMOJI = {
     "(ヾﾉ･ω･`)", "( ˙꒳​˙ )", "( ´ ▽ ` )ﾉ", "(｡･∀･)ﾉﾞ",
     "(*・ω・)ﾉ", "( ´ ∀ ` )ﾉ", "ヾ(☆▽☆)", "(o´ω`o)ﾉ",
     "💬(・∀・)", "( ^_^)／", "(*￣▽￣)d", "b(￣▽￣*)",
-    "( ﾟ▽ﾟ)/", "( ´ ▽ ` )", "(・ω・)ノ", "ヾ(´･ω･｀)",
+    "( ﾟ▽ﾟ)/", "( ´ ▽ ` )", "(・ω・)ノ", "ヾ(´･ω･`)",
     "Hi~ o(*￣▽￣*)ブ", "(｡･∀･)ﾉ", "(*^▽^*)", "(￣▽￣)~*",
     "<(￣︶￣)>", "(oﾟvﾟ)ノ", "ヽ(✿ﾟ▽ﾟ)ノ", "(*￣3￣)╭",
     "(´∀｀)♡", "(●'◡'●)", "(✿◡‿◡)", "(*/ω＼*)"
@@ -408,7 +407,7 @@ const KAOMOJI = {
   ],
   windows: [
     "🪟(•_•)", "(◕‿◕)🪟", "٩(◕‿◕｡)۶🪟", "🪟(*≧∀≦*)",
-    "(ノ´ヮ`)ノ*:･ﾟ✧🪟", "🪟ヽ(´▽`)/", "(•̀ᴗ•́)و🪟", "🪟(｡•̀ᴗ-)✧",
+    "(ノ´ヮ`)ノ*:・゚✧🪟", "🪟ヽ(´▽`)/", "(•̀ᴗ•́)و🪟", "🪟(｡•̀ᴗ-)✧",
     "( ˘ω˘ )🪟", "🪟(´・ω・`)", "(◠‿◠)🪟", "🪟٩(^‿^)۶",
     "⊞(•_•)", "(⌐■_■)⊞", "⊞ヾ(⌐■_■)ノ♪", "(◕ᴗ◕✿)⊞",
     "⊞(ノ◕ヮ◕)ノ*:･ﾟ✧", "(*´▽`*)⊞", "⊞(๑>◡<๑)", "(≧◡≦)⊞",
@@ -582,6 +581,13 @@ const StatusPage = () => {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   useEffect(() => {
+    if (hasFetched && !isDataLoaded) {
+       const t = setTimeout(() => setIsDataLoaded(true), 100);
+       return () => clearTimeout(t);
+    }
+  }, [hasFetched, isDataLoaded]);
+
+  useEffect(() => {
     if (statuses.length === 0) return;
     
     if (activeOsName) {
@@ -642,31 +648,45 @@ const StatusPage = () => {
       const currentStatusKey = targetStatus ? JSON.stringify(targetStatus) : 'offline';
       const statusChanged = prevStatusRef.current !== currentStatusKey;
 
-      if (isImmediate || (prevStatusRef.current === '' && statusChanged)) {
-          const kaomoji = getRandomKaomoji(effectiveActivity);
+      // Major change detection: activity change or offline <-> online switch
+      const activityChanged = effectiveActivity !== displayedActivity;
+      
+      // If it's the first load or a major change, do the full transition
+      if (isImmediate || !isDataLoaded || (prevStatusRef.current === '' && statusChanged) || activityChanged) {
+          if (statusChanged || isImmediate || !isDataLoaded) {
+              prevStatusRef.current = currentStatusKey;
+              
+              const newKaomoji = getRandomKaomoji(effectiveActivity);
+              pendingUpdateRef.current = {
+                  status: targetStatus,
+                  activity: effectiveActivity,
+                  kaomoji: newKaomoji,
+              };
+              
+              if (isImmediate || !isDataLoaded) {
+                  // Instant update without transition for initial load
+                  applyPendingUpdate();
+                  setIsDataLoaded(true);
+              } else {
+                  // Full blur transition for major changes
+                  setIsActivityTransitioning(true);
+                  setTimeout(() => {
+                      applyPendingUpdate();
+                      setTimeout(() => {
+                          setIsActivityTransitioning(false);
+                      }, 200);
+                  }, 300);
+              }
+          }
+      } else if (statusChanged) {
+          // Minor change (same activity, just title/app name update)
+          // Update immediately without global blur
+          prevStatusRef.current = currentStatusKey;
           setDisplayedStatus(targetStatus);
           setDisplayedActivity(effectiveActivity);
-          setInitialKaomoji(kaomoji);
-          prevStatusRef.current = currentStatusKey;
-          setIsDataLoaded(true);
-      } else if (statusChanged) {
-          prevStatusRef.current = currentStatusKey;
-          
-          const newKaomoji = getRandomKaomoji(effectiveActivity);
-          pendingUpdateRef.current = {
-              status: targetStatus,
-              activity: effectiveActivity,
-              kaomoji: newKaomoji,
-          };
-          setIsActivityTransitioning(true);
-          setTimeout(() => {
-              applyPendingUpdate();
-              setTimeout(() => {
-                  setIsActivityTransitioning(false);
-              }, 200);
-          }, 300);
+          // We do NOT update kaomoji here to keep it stable during minor updates
       }
-  }, [applyPendingUpdate]);
+  }, [applyPendingUpdate, displayedActivity]);
 
   const fetchStatus = useCallback(async (isFirstFetch: boolean = false) => {
     const handleFetchError = () => {
@@ -687,19 +707,18 @@ const StatusPage = () => {
       }
       const data: StatusData[] = await response.json();
 
-      // Sort data based on priority
       data.sort((a, b) => {
         const getWeight = (s: StatusData) => {
           const os = s.os_name?.toLowerCase() || '';
           const app = s.app_name || '';
 
           if (os.includes('android')) {
-            return app === 'Screen Off' ? 100 : 0; // Active Android = 0 (Top), Screen Off = 100 (Bottom)
+            return app === 'Screen Off' ? 100 : 0;
           }
           if (os.includes('windows')) return 10;
           if (os.includes('linux')) return 20;
           if (os.includes('mac') || os.includes('darwin')) return 30;
-          return 50; // Others
+          return 50; 
         };
 
         return getWeight(a) - getWeight(b);
@@ -850,11 +869,11 @@ const StatusPage = () => {
                  {displayedStatusType === 'online' ? (
                     <div className="flex flex-col items-center gap-1">
                       <span className="text-lg md:text-xl font-display font-medium text-white/80 border-b border-white/10 pb-1">
-                        {displayedStatus?.app_name || 'Unknown'}
+                        <FadeText text={displayedStatus?.app_name || 'Unknown'} />
                       </span>
                       {displayedStatus?.title && displayedStatus.title !== displayedStatus.app_name && (
                         <span className="text-xs text-white/30 font-light max-w-[200px] md:max-w-xs truncate tracking-wide">
-                          {displayedStatus.title}
+                          <FadeText text={displayedStatus.title} />
                         </span>
                       )}
                     </div>
