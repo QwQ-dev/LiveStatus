@@ -72,3 +72,9 @@ You can find the latest built **Backend**, **Client** and **Android Client** exe
   [https://qwqdev.jenkins.legacylands.cn/job/LiveStatus/](https://qwqdev.jenkins.legacylands.cn/job/LiveStatus/)
 
 Please check the build artifacts for the specific **Linux**, **Windows** or **Android** versions you require.
+
+### Sponsors
+
+Fully sponsored and maintained by [LegacyLands](https://github.com/LegacyLands).
+
+![legacy-lands-logo.png](./legacy-lands-logo.png)
