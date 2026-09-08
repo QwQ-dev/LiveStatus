@@ -66,12 +66,8 @@ update_interval_secs: 5              # Status update interval
 
 ### Pre-built Versions
 
-You can find the latest built **Backend**, **Client** and **Android Client** executables through our Jenkins CI/CD pipeline.
-
-* **Jenkins Build Address:**
-  [https://qwqdev.jenkins.legacylands.cn/job/LiveStatus/](https://qwqdev.jenkins.legacylands.cn/job/LiveStatus/)
-
-Please check the build artifacts for the specific **Linux**, **Windows** or **Android** versions you require.
+We apologize, but due to various factors, we are not currently offering pre-built versions.
+However, it's all quite simple, and you can try it yourself.
 
 ### Sponsors
 
